@@ -116,7 +116,7 @@ export class GoogleMapComponent {
                 fields: ['place_id', 'geometry', 'name', 'formatted_address'],
             };
 
-            const autocomplete = new google.maps.places.Autocomplete(
+            const autocomplete = new google.maps.places.PlaceAutocompleteElement(
                 this.autocompleteInput.nativeElement,
                 autocompleteOptions
             );
