@@ -1,0 +1,121 @@
+<form [formGroup]="addressForm" (ngSubmit)="onGenerateQrCode()" novalidate class="address-form">
+    <!-- Country -->
+    <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Country</mat-label>
+            <mat-select formControlName="country" autocomplete="country">
+                @for (country of countries; track country.code) {
+                    <mat-option [value]="country.code">
+                        {{ country.flag }} {{ country.name }}
+                    </mat-option>
+                }
+            </mat-select>
+            @if (countryControl.errors?.['required']) {
+                <mat-error>Country is required</mat-error>
+            }
+        </mat-form-field>
+    </div>
+
+    <!-- Address Line 1 -->
+    <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Address line 1</mat-label>
+            <input
+                matInput
+                formControlName="streetAddress"
+                placeholder="Address line 1"
+                autocomplete="address-line1"
+            />
+            @if (streetAddressControl.errors?.['required']) {
+                <mat-error>Street address is required</mat-error>
+            }
+            @if (streetAddressControl.errors?.['minlength']) {
+                <mat-error>Street address must be at least 5 characters</mat-error>
+            }
+        </mat-form-field>
+    </div>
+
+    <!-- Address Line 2 (Optional) -->
+    <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Address line 2</mat-label>
+            <input
+                matInput
+                formControlName="addressLine2"
+                placeholder="Address line 2"
+                autocomplete="address-line2"
+            />
+        </mat-form-field>
+    </div>
+
+    <!-- Oblast -->
+    <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Oblast</mat-label>
+            <mat-select formControlName="stateProvince" autocomplete="address-level1">
+                <mat-option value="">Select oblast</mat-option>
+                @for (state of states; track state.code) {
+                    <mat-option [value]="state.code">
+                        {{ state.name }}
+                    </mat-option>
+                }
+            </mat-select>
+            @if (stateProvinceControl.errors?.['required']) {
+                <mat-error>Oblast is required</mat-error>
+            }
+        </mat-form-field>
+    </div>
+
+    <!-- City -->
+    <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>City</mat-label>
+            <mat-select formControlName="city" autocomplete="address-level2">
+                <mat-option value="">Select a city</mat-option>
+                @for (city of cities; track city.name) {
+                    <mat-option [value]="city.name">
+                        {{ city.name }}
+                    </mat-option>
+                }
+            </mat-select>
+            @if (cityControl.errors?.['required']) {
+                <mat-error>City is required</mat-error>
+            }
+        </mat-form-field>
+    </div>
+
+    <!-- Postal Code -->
+    <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Postal code</mat-label>
+            <input
+                matInput
+                formControlName="postalCode"
+                placeholder="postal-code"
+                autocomplete="postal-code"
+            />
+            @if (postalCodeControl.errors?.['required']) {
+                <mat-error>Postal code is required</mat-error>
+            }
+            @if (postalCodeControl.errors?.['pattern']) {
+                <mat-error>Invalid postal code format</mat-error>
+            }
+        </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+        <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="addressForm.invalid || isGeneratingQrCode()"
+            class="generate-qr-button"
+        >
+            @if (isGeneratingQrCode()) {
+                <span class="button-content"> Generating QR Code... </span>
+            } @else {
+                <span class="button-content"> Generate QR Code </span>
+            }
+        </button>
+    </div>
+</form>

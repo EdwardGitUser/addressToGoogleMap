@@ -1,0 +1,12 @@
+<div class="layout">
+    <mat-card class="form-card">
+        <app-address-form
+            (generateQrCode)="onGenerateQrCode($event)"
+            (addressChanged)="onAddressChanged($event)"
+        >
+        </app-address-form>
+    </mat-card>
+    <div class="map-container">
+        <app-google-map [address]="currentAddress()"></app-google-map>
+    </div>
+</div>
