@@ -9,7 +9,7 @@ import {
     AfterViewInit,
 } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps';
-import { UserAddress } from '../../address-form/address-form/address-form.component';
+import { UserAddress } from '../../address-form/address-form.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -31,6 +31,7 @@ export class GoogleMapComponent {
     public readonly center = signal(DEFAULT_MAP_CENTER);
     public readonly zoom = signal(DEFAULT_MAP_ZOOM);
     public readonly mapOptions = signal<google.maps.MapOptions>({
+        mapId: 'DEMO_MAP_ID',
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         scrollwheel: true,
         disableDoubleClickZoom: false,
@@ -44,13 +45,12 @@ export class GoogleMapComponent {
     });
 
     public readonly selectedPlace = signal<google.maps.LatLngLiteral | null>(null);
-    public readonly markerOptions = signal<google.maps.MarkerOptions>({
-        draggable: false,
+    public readonly markerOptions = signal<google.maps.marker.AdvancedMarkerElementOptions>({
+        gmpDraggable: false,
     });
 
     private readonly geocoder = new google.maps.Geocoder();
     private map?: google.maps.Map;
-    private autocomplete?: google.maps.places.Autocomplete;
 
     constructor() {
         effect(() => {
@@ -112,12 +112,19 @@ export class GoogleMapComponent {
                 'places'
             )) as google.maps.PlacesLibrary;
 
-            this.autocomplete = new Autocomplete(this.autocompleteInput.nativeElement);
+            const autocompleteOptions = {
+                fields: ['place_id', 'geometry', 'name', 'formatted_address'],
+            };
+            //google.maps.places.PlaceAutocompleteElement
+            const autocomplete = new google.maps.places.Autocomplete(
+                this.autocompleteInput.nativeElement,
+                autocompleteOptions
+            );
 
-            this.autocomplete.bindTo('bounds', this.map!);
+            autocomplete.bindTo('bounds', this.map!);
 
-            this.autocomplete.addListener('place_changed', () => {
-                const place = this.autocomplete!.getPlace();
+            autocomplete.addListener('place_changed', () => {
+                const place = autocomplete.getPlace();
 
                 if (place.geometry && place.geometry.location) {
                     const location = {

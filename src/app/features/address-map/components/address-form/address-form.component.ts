@@ -28,7 +28,7 @@ import {
     LocationState,
     LocationCity,
     LocationService,
-} from '../../../services/location.service';
+} from '../../services/location.service';
 
 export interface UserAddress {
     country: string;

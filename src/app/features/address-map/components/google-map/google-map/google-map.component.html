@@ -28,7 +28,8 @@
         (mapInitialized)="onMapInitialized($event)"
     >
         @if (selectedPlace()) {
-            <map-marker [position]="selectedPlace()!" [options]="markerOptions()"> </map-marker>
+            <map-advanced-marker [position]="selectedPlace()!" [options]="markerOptions()">
+            </map-advanced-marker>
         }
     </google-map>
 </div>

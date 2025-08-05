@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { GoogleMapComponent } from './components/google-map/google-map/google-map.component';
 import {
     AddressFormComponent,
     UserAddress,
-} from './components/address-form/address-form/address-form.component';
-import { GoogleMapComponent } from './components/google-map/google-map/google-map.component';
+} from './components/address-form/address-form.component';
 
 @Component({
     selector: 'app-address-map',

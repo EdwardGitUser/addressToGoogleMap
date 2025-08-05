@@ -156,6 +156,10 @@ Run `npm run format:lint` to automatically format and fix linting issues.
 - [ ] Offline map caching
 - [ ] Address validation API integration
 
+## 🆕 Recent Updates
+
+- **March 2025**: Updated to use Google Maps `PlaceAutocompleteElement` instead of deprecated `Autocomplete` API for better future compatibility and performance
+
 ## 📞 Support
 
 If you encounter any issues or have questions:

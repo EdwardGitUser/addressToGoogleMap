@@ -109,7 +109,6 @@
             color="primary"
             type="submit"
             [disabled]="addressForm.invalid || isGeneratingQrCode()"
-            class="generate-qr-button"
         >
             @if (isGeneratingQrCode()) {
                 <span class="button-content"> Generating QR Code... </span>

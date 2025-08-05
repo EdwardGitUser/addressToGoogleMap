@@ -1,0 +1,27 @@
+.address-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1.5rem;
+
+    .form-row {
+        display: flex;
+        gap: 1rem;
+
+        mat-form-field {
+            flex: 1;
+
+            &.full-width {
+                width: 100%;
+            }
+        }
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+}
