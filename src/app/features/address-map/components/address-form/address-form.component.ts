@@ -9,7 +9,6 @@ import {
     DestroyRef,
 } from '@angular/core';
 import {
-    AbstractControl,
     FormBuilder,
     FormControl,
     FormGroup,
@@ -78,8 +77,6 @@ export class AddressFormComponent implements OnInit {
     private readonly fb = inject(FormBuilder);
     private readonly destroyRef = inject(DestroyRef);
     private readonly locationService = inject(LocationService);
-
-    constructor() {}
 
     public ngOnInit(): void {
         this.initializeLocationData();

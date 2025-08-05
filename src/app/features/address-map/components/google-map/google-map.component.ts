@@ -6,10 +6,9 @@ import {
     signal,
     ViewChild,
     ElementRef,
-    AfterViewInit,
 } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps';
-import { UserAddress } from '../../address-form/address-form.component';
+import { UserAddress } from '../address-form/address-form.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -66,7 +65,7 @@ export class GoogleMapComponent {
         this.initializeAutocomplete();
     }
 
-    public onPlaceSelected(place: any): void {
+    public onPlaceSelected(place: google.maps.places.PlaceResult): void {
         if (place.geometry && place.geometry.location) {
             const location = {
                 lat: place.geometry.location.lat(),
@@ -145,6 +144,8 @@ export class GoogleMapComponent {
                     }
                 }
             });
-        } catch (error) {}
+        } catch (error) {
+            console.error('Error initializing autocomplete:', error);
+        }
     }
 }

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { GoogleMapComponent } from './components/google-map/google-map/google-map.component';
+import { GoogleMapComponent } from './components/google-map/google-map.component';
 import {
     AddressFormComponent,
     UserAddress,
@@ -19,7 +19,7 @@ export class AddressMapComponent {
     private snackBar = inject(MatSnackBar);
     public currentAddress = signal<UserAddress | null>(null);
 
-    public onGenerateQrCode(address: UserAddress) {
+    public onGenerateQrCode() {
         this.snackBar.open('QR Code generated successfully!', 'Close', {
             duration: 3000,
             horizontalPosition: 'center',
