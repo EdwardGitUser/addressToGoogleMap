@@ -31,16 +31,11 @@ export class GoogleMapComponent {
     public readonly zoom = signal(DEFAULT_MAP_ZOOM);
     public readonly mapOptions = signal<google.maps.MapOptions>({
         mapId: 'DEMO_MAP_ID',
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
         scrollwheel: true,
         disableDoubleClickZoom: false,
         maxZoom: 20,
         minZoom: 4,
         mapTypeControl: true,
-        mapTypeControlOptions: {
-            style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-            position: google.maps.ControlPosition.TOP_LEFT,
-        },
     });
 
     public readonly selectedPlace = signal<google.maps.LatLngLiteral | null>(null);
@@ -48,13 +43,13 @@ export class GoogleMapComponent {
         gmpDraggable: false,
     });
 
-    private readonly geocoder = new google.maps.Geocoder();
+    private geocoder?: google.maps.Geocoder;
     private map?: google.maps.Map;
 
     constructor() {
         effect(() => {
             const currentAddress: UserAddress | null = this.address();
-            if (currentAddress) {
+            if (currentAddress && typeof google !== 'undefined' && google.maps) {
                 this.updateMapLocation(currentAddress);
             }
         });
@@ -62,7 +57,24 @@ export class GoogleMapComponent {
 
     public onMapInitialized(map: google.maps.Map): void {
         this.map = map;
-        this.initializeAutocomplete();
+        this.geocoder = new google.maps.Geocoder();
+
+        if (google.maps.MapTypeId) {
+            map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+        }
+
+        if (google.maps.MapTypeControlStyle && google.maps.ControlPosition) {
+            map.setOptions({
+                mapTypeControlOptions: {
+                    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                    position: google.maps.ControlPosition.TOP_LEFT,
+                },
+            });
+        }
+
+        setTimeout(() => {
+            this.initializeAutocomplete();
+        }, 0);
     }
 
     public onPlaceSelected(place: google.maps.places.PlaceResult): void {
@@ -85,6 +97,10 @@ export class GoogleMapComponent {
     }
 
     private updateMapLocation(address: UserAddress): void {
+        if (typeof google === 'undefined' || !google.maps || !this.geocoder) {
+            return;
+        }
+
         const simpleAddress: string = this.buildSimpleAddress(address);
 
         this.geocoder.geocode({ address: simpleAddress }, (results, status) => {
@@ -105,17 +121,17 @@ export class GoogleMapComponent {
         );
     }
 
-    private async initializeAutocomplete(): Promise<void> {
-        try {
-            const { Autocomplete } = (await google.maps.importLibrary(
-                'places'
-            )) as google.maps.PlacesLibrary;
+    private initializeAutocomplete(): void {
+        if (typeof google === 'undefined' || !google.maps || !google.maps.places) {
+            return;
+        }
 
+        try {
             const autocompleteOptions = {
                 fields: ['place_id', 'geometry', 'name', 'formatted_address'],
             };
 
-            const autocomplete = new Autocomplete(
+            const autocomplete = new google.maps.places.Autocomplete(
                 this.autocompleteInput.nativeElement,
                 autocompleteOptions
             );
@@ -144,8 +160,8 @@ export class GoogleMapComponent {
                     }
                 }
             });
-        } catch (error) {
-            console.error('Error initializing autocomplete:', error);
+        } catch {
+            return;
         }
     }
 }
